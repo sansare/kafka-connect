@@ -1,0 +1,6 @@
+[submodule "kafka-elastic-sink-connector"]
+	path = kafka-elastic-sink-connector
+	url = https://stqcommon:Tz-q6qDL%23d3Mz8hm@github.com/StoriqaTeam/kafka-elastic-sink-connector.git
+[submodule "debezium"]
+	path = debezium
+	url = https://stqcommon:Tz-q6qDL%23d3Mz8hm@github.com/StoriqaTeam/debezium.git
