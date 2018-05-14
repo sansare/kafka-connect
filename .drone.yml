@@ -16,12 +16,9 @@ pipeline:
     - cd debezium && mvn clean package && cd ..
   package:
     image: plugins/docker
-    repo: storiqateam/stq-node
+    repo: storiqateam/kafka-connect
     tags:
       - ${DRONE_BRANCH//\//_}
       - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
     username: stqcommon
     password: "Tz-q6qDL#d3Mz8hm"
-    when:
-      event: [ push, tag ]
-      branch: master
