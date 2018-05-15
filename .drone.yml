@@ -20,6 +20,42 @@ pipeline:
     tags:
     - ${DRONE_BRANCH//\//_}
     - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
-    username: stqcommon
-    password: "Tz-q6qDL#d3Mz8hm"
-
+    secrets:
+    - docker_username
+    - docker_password
+  deploy2nightly:
+    image: jackthestripper/drone_k8s_rollout:20180510
+    user: ${K8S_NIGHTLY_USER}
+    token: ${K8S_NIGHTLY_TOKEN}
+    addr: ${K8S_NIGHTLY_ADDR}
+    object: kafka-connect
+    kind: deployment
+    namespace: default
+    img_names: [ storiqateam/kafka-connect ]
+    img_cnts: [ kafka-connect ]
+    img_tags: [ ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER} ]
+    ca: ${K8S_NIGHTLY_CA}
+    when:
+      branch: master
+      event: push
+    secrets:
+    - k8s_nightly_ca
+    - k8s_nightly_user
+    - k8s_nightly_token
+    - k8s_nightly_addr
+  notify_slack:
+    image: plugins/slack
+    webhook: https://hooks.slack.com/services/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
+    channel: release
+    icon_url: https://drone.io/favicon.ico
+    username: cd.stq.cloud
+    template: >
+      {{#success build.status}}
+        Build {{build.number}} for {{repo.name}} branch {{build.branch}} succeeded.
+      {{else}}
+        Build {{build.number}} for {{repo.name}} branch {{build.branch}} failed.
+      {{/success}}
+    when:
+      event: push
+      branch: [ master, release ]
+      status: [ failure, success ]
