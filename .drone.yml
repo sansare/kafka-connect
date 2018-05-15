@@ -18,5 +18,8 @@ pipeline:
     image: plugins/docker
     repo: storiqateam/kafka-connect
     tags:
-      - ${DRONE_BRANCH//\//_}
-      - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
+    - ${DRONE_BRANCH//\//_}
+    - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
+    username: stqcommon
+    password: "Tz-q6qDL#d3Mz8hm"
+
