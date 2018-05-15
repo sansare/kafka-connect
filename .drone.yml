@@ -33,7 +33,7 @@ pipeline:
     namespace: default
     img_names: [ storiqateam/kafka-connect ]
     img_cnts: [ kafka-connect ]
-    img_tags: [ ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER} ]
+    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
     ca: ${K8S_NIGHTLY_CA}
     when:
       branch: master
