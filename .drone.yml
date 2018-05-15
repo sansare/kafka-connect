@@ -25,16 +25,16 @@ pipeline:
     - docker_password
   deploy2nightly:
     image: jackthestripper/drone_k8s_rollout:20180510
-    user: ${K8S_NIGHTLY_USER}
-    token: ${K8S_NIGHTLY_TOKEN}
-    addr: ${K8S_NIGHTLY_ADDR}
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
-    ca: ${K8S_NIGHTLY_CA}
+    #user: ${K8S_NIGHTLY_USER}
+    #token: ${K8S_NIGHTLY_TOKEN}
+    #addr: ${K8S_NIGHTLY_ADDR}
+    #object: kafka-connect
+    #kind: deployment
+    #namespace: default
+    #img_names: [ storiqateam/kafka-connect ]
+    #img_cnts: [ kafka-connect ]
+    #img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
+    #ca: ${K8S_NIGHTLY_CA}
     when:
       branch: master
       event: push
