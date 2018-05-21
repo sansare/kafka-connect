@@ -9,6 +9,10 @@ pipeline:
     - rm -rf .git && mv -f .git.bak .git
     when:
       event: pull_request
+  update_submodules:
+    image: plugins/git
+    commands:
+    - git submodule update --remote --recursive
   build:
     image: maven:3.5
     commands:
