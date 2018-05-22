@@ -18,6 +18,9 @@ pipeline:
     commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
     - cd debezium && mvn clean package -DskipTests=true && cd ..
+    when:
+      event: push
+      branch: [ master, release* ]
   package:
     image: plugins/docker
     repo: storiqateam/kafka-connect
@@ -27,6 +30,9 @@ pipeline:
     secrets:
     - docker_username
     - docker_password
+    when:
+      event: push
+      branch: [ master, release* ]
   deploy2nightly:
     image: jackthestripper/drone_k8s_rollout:20180515
     user: admin
