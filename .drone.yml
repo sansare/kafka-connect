@@ -17,7 +17,7 @@ pipeline:
     image: maven:3.5
     commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
-    - cd debezium && mvn clean package && cd ..
+    - cd debezium && mvn clean package -DskipTests=true && cd ..
   package:
     image: plugins/docker
     repo: storiqateam/kafka-connect
