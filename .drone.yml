@@ -1,3 +1,9 @@
+clone:
+  git:
+    image: plugins/git
+    recursive: true
+    submodule_update_remote: true
+
 pipeline:
 
 ###
