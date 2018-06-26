@@ -58,7 +58,7 @@ indexCreate() {
         -X PUT \
         -H 'Content-Type: application/json' \
         "${es_url_base%%/}/${index}" \
-        -d $index_json
+        -d "$index_json"
 }
 
 mappingUpdate() {
