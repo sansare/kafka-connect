@@ -67,7 +67,7 @@ mappingUpdate() {
         -X PUT \
         -H 'Content-Type: application/json' \
         -d @${es_mapping_dir%%/}/${index}.json \
-        "${es_url_base%%/}/${index%%/}/${$es_url_mapping%%/}"
+        "${es_url_base%%/}/${index%%/}/${es_url_mapping%%/}"
 }
 
 ###
