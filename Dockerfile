@@ -13,4 +13,4 @@ COPY debezium/debezium-connector-postgres/target/debezium-connector-postgres-0.8
 COPY kafka-elastic-sink-connector/mapping/ /kafka-elastic-sink-connector/mapping/
 COPY mapping_upd.sh /mapping_upd.sh
 
-ENTRYPOINT bash -x /mapping_upd.sh && /etc/confluent/docker/launch
+ENTRYPOINT bash -x /mapping_upd.sh && /etc/confluent/docker/run
