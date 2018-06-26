@@ -45,93 +45,93 @@ pipeline:
     when:
       event: push
       branch: [ master, release* ]
-  deploy2nightly:
-    image: jackthestripper/drone_k8s_rollout:20180610
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
-    secrets:
-    - source: k8s_nightly_ca
-      target: k8s_ca
-    - source: k8s_nightly_user
-      target: k8s_user
-    - source: k8s_nightly_token
-      target: k8s_token
-    - source: k8s_nightly_addr
-      target: k8s_addr
-    when:
-      branch: master
-      event: push
-  deploy2stage:
-    image: jackthestripper/drone_k8s_rollout:20180610
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
-    secrets:
-    - source: k8s_stage_ca
-      target: k8s_ca
-    - source: k8s_stage_user
-      target: k8s_user
-    - source: k8s_stage_token
-      target: k8s_token
-    - source: k8s_stage_addr
-      target: k8s_addr
-    when:
-      branch: release
-      event: push
+  #deploy2nightly:
+    #image: jackthestripper/drone_k8s_rollout:20180610
+    #object: kafka-connect
+    #kind: deployment
+    #namespace: default
+    #img_names: [ storiqateam/kafka-connect ]
+    #img_cnts: [ kafka-connect ]
+    #img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
+    #secrets:
+    #- source: k8s_nightly_ca
+      #target: k8s_ca
+    #- source: k8s_nightly_user
+      #target: k8s_user
+    #- source: k8s_nightly_token
+      #target: k8s_token
+    #- source: k8s_nightly_addr
+      #target: k8s_addr
+    #when:
+      #branch: master
+      #event: push
+  #deploy2stage:
+    #image: jackthestripper/drone_k8s_rollout:20180610
+    #object: kafka-connect
+    #kind: deployment
+    #namespace: default
+    #img_names: [ storiqateam/kafka-connect ]
+    #img_cnts: [ kafka-connect ]
+    #img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
+    #secrets:
+    #- source: k8s_stage_ca
+      #target: k8s_ca
+    #- source: k8s_stage_user
+      #target: k8s_user
+    #- source: k8s_stage_token
+      #target: k8s_token
+    #- source: k8s_stage_addr
+      #target: k8s_addr
+    #when:
+      #branch: release
+      #event: push
 
 ###
 # Deploy to stable / production
 ###
 
-  deploy2stable:
-    image: jackthestripper/drone_k8s_rollout:20180610
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}' ]
-    secrets:
-    - source: k8s_stable_ca
-      target: k8s_ca
-    - source: k8s_stable_user
-      target: k8s_user
-    - source: k8s_stable_token
-      target: k8s_token
-    - source: k8s_stable_addr
-      target: k8s_addr
-    when:
-      branch: master
-      event: deployment
-      environment: stable
-  deploy2production:
-    image: jackthestripper/drone_k8s_rollout:20180610
-    namespace: default
-    kind: deployment
-    object: kafka-connect
-    img_names: storiqateam/kafka-connect
-    img_tags: ${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}
-    img_cnts: kafka-connect
-    secrets:
-    - source: k8s_prod_ca
-      target: k8s_ca
-    - source: k8s_prod_user
-      target: k8s_user
-    - source: k8s_prod_token
-      target: k8s_token
-    - source: k8s_prod_addr
-      target: k8s_addr
-    when:
-      branch: release*
-      event: deployment
-      environment: production
+  #deploy2stable:
+    #image: jackthestripper/drone_k8s_rollout:20180610
+    #object: kafka-connect
+    #kind: deployment
+    #namespace: default
+    #img_names: [ storiqateam/kafka-connect ]
+    #img_cnts: [ kafka-connect ]
+    #img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}' ]
+    #secrets:
+    #- source: k8s_stable_ca
+      #target: k8s_ca
+    #- source: k8s_stable_user
+      #target: k8s_user
+    #- source: k8s_stable_token
+      #target: k8s_token
+    #- source: k8s_stable_addr
+      #target: k8s_addr
+    #when:
+      #branch: master
+      #event: deployment
+      #environment: stable
+  #deploy2production:
+    #image: jackthestripper/drone_k8s_rollout:20180610
+    #namespace: default
+    #kind: deployment
+    #object: kafka-connect
+    #img_names: storiqateam/kafka-connect
+    #img_tags: ${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}
+    #img_cnts: kafka-connect
+    #secrets:
+    #- source: k8s_prod_ca
+      #target: k8s_ca
+    #- source: k8s_prod_user
+      #target: k8s_user
+    #- source: k8s_prod_token
+      #target: k8s_token
+    #- source: k8s_prod_addr
+      #target: k8s_addr
+    #when:
+      #branch: release*
+      #event: deployment
+      #environment: production
 
 ###
 # Notficatons and post deploy ops
