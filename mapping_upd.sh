@@ -16,7 +16,7 @@ es_indices=(
     "stores"
     "products"
 )
-es_mapping_dir="kafka-elastic-sink-connector/mapping"
+es_mapping_dir="/kafka-elastic-sink-connector/mapping"
 
 # Path to log file
 log_path="/var/log/$myname.log"
@@ -43,7 +43,7 @@ logEvent() {
 
 indexExist() {
     index=$1
-    curl -sf "${es_url_base%%/}/${index}"
+    curl -sif "${es_url_base%%/}/${index}"
 }
 
 indexCreate() {
@@ -54,7 +54,7 @@ indexCreate() {
     \"_doc\": $mapping
   }
 }"
-    curl -sf \
+    curl -sif \
         -X PUT \
         -H 'Content-Type: application/json' \
         "${es_url_base%%/}/${index}" \
@@ -63,7 +63,7 @@ indexCreate() {
 
 mappingUpdate() {
     index=$1
-    curl -sf \
+    curl -sif \
         -X PUT \
         -H 'Content-Type: application/json' \
         -d @${es_mapping_dir%%/}/${index}.json \
