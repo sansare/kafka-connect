@@ -54,7 +54,7 @@ indexCreate() {
     \"_doc\": $mapping
   }
 }"
-    curl -sif \
+    curl -si \
         -X PUT \
         -H 'Content-Type: application/json' \
         "${es_url_base%%/}/${index}" \
@@ -63,7 +63,7 @@ indexCreate() {
 
 mappingUpdate() {
     index=$1
-    curl -sif \
+    curl -si \
         -X PUT \
         -H 'Content-Type: application/json' \
         -d @${es_mapping_dir%%/}/${index}.json \
@@ -83,8 +83,13 @@ fi
 
 for index in ${es_indices[@]}
 do
-    indexExist $index || indexCreate $index
-    mappingUpdate $index
+    indexExist $index
+    if [[ $? = 0 ]]
+    then
+        mappingUpdate $index
+    else
+        indexCreate $index
+    fi
 done
 
 exit 0
