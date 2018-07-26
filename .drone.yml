@@ -152,4 +152,4 @@ pipeline:
     when:
       event: [ push, tag, deployment ]
       branch: [ master, release ]
-      status: [ failure, success ]
+      status: failure
