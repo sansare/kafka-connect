@@ -31,6 +31,7 @@ pipeline:
     repo: storiqateam/kafka-connect
     tags:
     - '${DRONE_TAG}'
+    - latest
     secrets:
     - docker_username
     - docker_password
@@ -42,9 +43,9 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
+    img_names: storiqateam/kafka-connect
+    img_cnts: kafka-connect
+    img_tags: '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}'
     secrets:
     - source: k8s_nightly_ca
       target: k8s_ca
@@ -62,9 +63,9 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_TAG}' ]
+    img_names: storiqateam/kafka-connect
+    img_cnts: kafka-connect ]
+    img_tags: '${DRONE_TAG}'
     secrets:
     - source: k8s_stage_ca
       target: k8s_ca
@@ -86,9 +87,9 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: [ storiqateam/kafka-connect ]
-    img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}' ]
+    img_names: storiqateam/kafka-connect
+    img_cnts: kafka-connect
+    img_tags: '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}'
     secrets:
     - source: k8s_stable_ca
       target: k8s_ca
@@ -101,20 +102,13 @@ pipeline:
     when:
       event: deployment
       environment: stable
-  getenv:
-    image: alpine
-    commands:
-    - printenv
-    when:
-      event: deployment
-      environment: krap
   deploy2production:
     image: jackthestripper/drone_setimage
     namespace: default
     kind: deployment
     object: kafka-connect
     img_names: storiqateam/kafka-connect
-    img_tags: ${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}
+    img_tags: '${DRONE_TAG}'
     img_cnts: kafka-connect
     secrets:
     - source: k8s_prod_ca
