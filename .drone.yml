@@ -122,6 +122,13 @@ pipeline:
     when:
       event: deployment
       environment: stable
+  getenv:
+    image: alpine
+    commands:
+    - printenv
+    when:
+      event: deployment
+      environment: krap
   deploy2production:
     image: jackthestripper/drone_k8s_rollout:20180610
     namespace: default
