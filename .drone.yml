@@ -31,8 +31,10 @@ pipeline:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
     - cd debezium && mvn clean package -DskipTests=true && cd ..
     when:
-      event: push
-      branch: [ master, release* ]
+      event:
+      - push
+      - tag
+      - pull_request
   package:
     image: plugins/docker
     repo: storiqateam/kafka-connect
@@ -43,8 +45,19 @@ pipeline:
     - docker_username
     - docker_password
     when:
-      event: push
-      branch: [ master, release* ]
+      event:
+      - push
+  package:
+    image: plugins/docker
+    repo: storiqateam/kafka-connect
+    tags:
+    - ${DRONE_TAG}
+    secrets:
+    - docker_username
+    - docker_password
+    when:
+      event:
+      - tag
   deploy2nightly:
     image: jackthestripper/drone_k8s_rollout:20180610
     object: kafka-connect
@@ -66,13 +79,13 @@ pipeline:
       branch: master
       event: push
   deploy2stage:
-    image: jackthestripper/drone_k8s_rollout:20180610
+    image: jackthestripper/drone_setimage
     object: kafka-connect
     kind: deployment
     namespace: default
     img_names: [ storiqateam/kafka-connect ]
     img_cnts: [ kafka-connect ]
-    img_tags: [ '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}' ]
+    img_tags: [ '${DRONE_TAG}' ]
     secrets:
     - source: k8s_stage_ca
       target: k8s_ca
@@ -83,8 +96,7 @@ pipeline:
     - source: k8s_stage_addr
       target: k8s_addr
     when:
-      branch: release
-      event: push
+      event: tag
 
 ###
 # Deploy to stable / production
@@ -108,9 +120,15 @@ pipeline:
     - source: k8s_stable_addr
       target: k8s_addr
     when:
-      branch: master
       event: deployment
       environment: stable
+  getenv:
+    image: alpine
+    commands:
+    - printenv
+    when:
+      event: deployment
+      environment: krap
   deploy2production:
     image: jackthestripper/drone_k8s_rollout:20180610
     namespace: default
@@ -129,7 +147,6 @@ pipeline:
     - source: k8s_prod_addr
       target: k8s_addr
     when:
-      branch: release*
       event: deployment
       environment: production
 
@@ -151,5 +168,4 @@ pipeline:
       {{/success}}
     when:
       event: [ push, tag, deployment ]
-      branch: [ master, release ]
       status: failure
