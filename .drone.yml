@@ -5,26 +5,6 @@ clone:
     submodule_update_remote: true
 
 pipeline:
-
-###
-# Test PR
-###
-
-  update_pr:
-    image: plugins/git
-    commands:
-    - export BRANCH_SRC=origin/${DRONE_COMMIT_REFSPEC%%:*} BRANCH_DST=origin/${DRONE_BRANCH}
-    - cp -rpf .git .git.bak
-    - git config --global user.email "service@storiqa.com" && git config --global user.name "Storiqa Common"
-    - git fetch && git checkout $BRANCH_SRC && git merge --no-commit $BRANCH_DST
-    - rm -rf .git && mv -f .git.bak .git
-    when:
-      event: pull_request
-
-###
-# Build and deploy to nightly / stage
-###
-
   build:
     image: maven:3.5
     commands:
@@ -34,7 +14,6 @@ pipeline:
       event:
       - push
       - tag
-      - pull_request
   package:
     image: plugins/docker
     repo: storiqateam/kafka-connect
@@ -51,7 +30,7 @@ pipeline:
     image: plugins/docker
     repo: storiqateam/kafka-connect
     tags:
-    - ${DRONE_TAG}
+    - '${DRONE_TAG}'
     secrets:
     - docker_username
     - docker_password
@@ -59,7 +38,7 @@ pipeline:
       event:
       - tag
   deploy2nightly:
-    image: jackthestripper/drone_k8s_rollout:20180610
+    image: jackthestripper/drone_setimage
     object: kafka-connect
     kind: deployment
     namespace: default
@@ -103,7 +82,7 @@ pipeline:
 ###
 
   deploy2stable:
-    image: jackthestripper/drone_k8s_rollout:20180610
+    image: jackthestripper/drone_setimage
     object: kafka-connect
     kind: deployment
     namespace: default
@@ -130,7 +109,7 @@ pipeline:
       event: deployment
       environment: krap
   deploy2production:
-    image: jackthestripper/drone_k8s_rollout:20180610
+    image: jackthestripper/drone_setimage
     namespace: default
     kind: deployment
     object: kafka-connect
