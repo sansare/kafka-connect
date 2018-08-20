@@ -64,7 +64,7 @@ pipeline:
     kind: deployment
     namespace: default
     img_names: storiqateam/kafka-connect
-    img_cnts: kafka-connect ]
+    img_cnts: kafka-connect
     img_tags: '${DRONE_TAG}'
     secrets:
     - source: k8s_stage_ca
