@@ -12,6 +12,9 @@ myname=`basename $0`
 
 es_url_base=${ES_URL-"http://elasticsearch:9200"}
 es_url_mapping="_mappings/_doc"
+es_url_open="_open"
+es_url_close="_close"
+es_url_settings="_settings"
 es_indices=(
     "stores"
     "products"
@@ -70,6 +73,23 @@ mappingUpdate() {
         "${es_url_base%%/}/${index%%/}/${es_url_mapping%%/}"
 }
 
+settingsUpdate() {
+    index=$1
+    curl -si \
+        -X POST \
+        -H 'Content-Type: application/json' \
+        "${es_url_base%%/}/${index%%/}/${es_url_close%%/}"
+    curl -si \
+        -X PUT \
+        -H 'Content-Type: application/json' \
+        -d @${es_mapping_dir%%/}/${index}-settings.json \
+        "${es_url_base%%/}/${index%%/}/${es_url_settings%%/}"
+    curl -si \
+        -X POST \
+        -H 'Content-Type: application/json' \
+        "${es_url_base%%/}/${index%%/}/${es_url_open%%/}"
+}
+
 ###
 # main()
 ###
@@ -86,6 +106,7 @@ do
     indexExist $index
     if [[ $? = 0 ]]
     then
+        settingsUpdate $index
         mappingUpdate $index
     else
         indexCreate $index
