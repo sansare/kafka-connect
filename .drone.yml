@@ -16,7 +16,7 @@ pipeline:
       - tag
   package:
     image: plugins/docker
-    repo: storiqateam/kafka-connect
+    repo: sansare/kafka-connect
     tags:
     - ${DRONE_BRANCH//\//_}
     - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
@@ -28,7 +28,7 @@ pipeline:
       - push
   package:
     image: plugins/docker
-    repo: storiqateam/kafka-connect
+    repo: sansare/kafka-connect
     tags:
     - '${DRONE_TAG}'
     - latest
@@ -43,7 +43,7 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: storiqateam/kafka-connect
+    img_names: sansare/kafka-connect
     img_cnts: kafka-connect
     img_tags: '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}'
     secrets:
@@ -63,7 +63,7 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: storiqateam/kafka-connect
+    img_names: sansare/kafka-connect
     img_cnts: kafka-connect
     img_tags: '${DRONE_TAG}'
     secrets:
@@ -87,7 +87,7 @@ pipeline:
     object: kafka-connect
     kind: deployment
     namespace: default
-    img_names: storiqateam/kafka-connect
+    img_names: sansare/kafka-connect
     img_cnts: kafka-connect
     img_tags: '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}'
     secrets:
@@ -107,7 +107,7 @@ pipeline:
     namespace: default
     kind: deployment
     object: kafka-connect
-    img_names: storiqateam/kafka-connect
+    img_names: sansare/kafka-connect
     img_tags: '${DRONE_TAG}'
     img_cnts: kafka-connect
     secrets:
