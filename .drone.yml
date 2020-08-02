@@ -6,7 +6,7 @@ clone:
 
 pipeline:
   build:
-    image: maven:3.4
+    image: maven:3.5
     commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
     - cd debezium && mvn clean package -DskipTests=true && cd ..
