@@ -39,7 +39,7 @@ pipeline:
       event:
       - tag
   deploy2nightly:
-    image: jackthestripper/drone_setimage
+    image: sansare/drone_k8s_rollout
     object: kafka-connect
     kind: deployment
     namespace: default
@@ -59,7 +59,7 @@ pipeline:
       branch: master
       event: push
   deploy2stage:
-    image: jackthestripper/drone_setimage
+    image: sansare/drone_k8s_rollout
     object: kafka-connect
     kind: deployment
     namespace: default
@@ -83,7 +83,7 @@ pipeline:
 ###
 
   deploy2stable:
-    image: jackthestripper/drone_setimage
+    image: sansare/drone_k8s_rollout
     object: kafka-connect
     kind: deployment
     namespace: default
@@ -103,7 +103,7 @@ pipeline:
       event: deployment
       environment: stable
   deploy2production:
-    image: jackthestripper/drone_setimage
+    image: sansare/drone_k8s_rollout
     namespace: default
     kind: deployment
     object: kafka-connect
