@@ -1,6 +1,3 @@
-[submodule "kafka-elastic-sink-connector"]
-	path = kafka-elastic-sink-connector
-	url =  https://github.com/sansare/kafka-elastic-sink-connector.git
 [submodule "debezium"]
 	path = debezium
 	url = https://github.com/debezium/debezium
