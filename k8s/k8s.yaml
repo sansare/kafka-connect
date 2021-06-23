@@ -27,7 +27,7 @@ spec:
         image: {{.image}}
         ports:
         - containerPort: 8083
-      - env:
+        env:
           - name: CONNECT_BOOTSTRAP_SERVERS
             value: broker:9092
           - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
