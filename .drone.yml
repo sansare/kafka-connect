@@ -1,124 +1,149 @@
-clone:
-  git:
-    image: plugins/git
-    recursive: true
-    submodule_update_remote: true
+kind: pipeline
+type: kubernetes
+name: default
 
-pipeline:
-  build:
-    image: maven:3.5
-    commands:
+platform:
+  os: linux
+  arch: arm64
+
+clone:
+  depth: 50
+
+steps:
+# Fetch git sub-modules
+- name: submodules
+  image: alpine/git
+  commands:
+    - git submodule init
+    - git submodule update --recursive --remote
+
+# Build
+- name: build
+  image: maven:3.5
+  commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
     - cd debezium && mvn clean package -DskipTests=true && cd ..
-    when:
-      event:
+  when:
+    event:
       - push
       - tag
-  package:
-    image: plugins/docker
-    repo: sansare/kafka-connect
+    branch:
+      - master
+
+# publish image in gce registry
+- name: publish
+  image: plugins/gcr
+  settings:
+    project: sansar-299400
+    registry: gcr.io
+    repo: sansar-299400/kafka-connect
     tags:
-    - ${DRONE_BRANCH//\//_}
-    - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
-    secrets:
-    - docker_username
-    - docker_password
-    when:
-      event:
+      - ${DRONE_BRANCH//\//_}
+      - ${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
+    json_key:
+      from_secret: GOOGLE_CREDENTIALS
+  when:
+    event:
       - push
-  package:
-    image: plugins/docker
-    repo: sansare/kafka-connect
+
+# publish release image in gce registry
+- name: publish-tag
+  image: plugins/gcr
+  settings:
+    project: sansar-299400
+    registry: gcr.io
+    repo: sansar-299400/kafka-connect
     tags:
-    - '${DRONE_TAG}'
-    - latest
-    secrets:
-    - docker_username
-    - docker_password
-    when:
-      event:
+      - '${DRONE_TAG}'
+      - latest
+    json_key:
+      from_secret: GOOGLE_CREDENTIALS
+  when:
+    event:
       - tag
-  deploy2nightly:
-    image: sansare/drone_k8s_rollout
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: sansare/kafka-connect
-    img_cnts: kafka-connect
-    img_tags: '${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}'
-    secrets:
-    - source: k8s_nightly_ca
-      target: k8s_ca
-    - source: k8s_nightly_user
-      target: k8s_user
-    - source: k8s_nightly_token
-      target: k8s_token
-    - source: k8s_nightly_addr
-      target: k8s_addr
-    when:
-      branch: master
-      event: push
-  deploy2stage:
-    image: sansare/drone_k8s_rollout
-    object: kafka-connect
-    kind: deployment
-    namespace: default
-    img_names: sansare/kafka-connect
-    img_cnts: kafka-connect
-    img_tags: '${DRONE_TAG}'
-    secrets:
-    - source: k8s_stage_ca
-      target: k8s_ca
-    - source: k8s_stage_user
-      target: k8s_user
-    - source: k8s_stage_token
-      target: k8s_token
-    - source: k8s_stage_addr
-      target: k8s_addr
-    when:
-      event: tag
 
-###
-# Deploy to stable / production
-###
+# deploy-nightly
+- name: deploy-nightly
+  image: nytimes/drone-gke
+  environment:
+    TOKEN:
+      from_secret: GOOGLE_CREDENTIALS
+  settings:
+    cluster: drone
+    expand_env_vars: true
+    template: k8s/k8s.yaml
+    namespace: default
+    skip_secret_template: true
+    zone: us-east1-c
+    vars:
+      app: kafka-connect
+      stack: storiqa
+      image: gcr.io/sansar-299400/kafka-connect:${DRONE_BRANCH//\//_}${DRONE_BUILD_NUMBER}
+  when:
+    branch:
+      - master
+    event:
+      - push
 
-  deploy2stable:
-    image: sansare/drone_k8s_rollout
-    object: kafka-connect
-    kind: deployment
+# deploy stage
+- name: deploy-stage
+  image: nytimes/drone-gke
+  environment:
+    TOKEN:
+      from_secret: GOOGLE_CREDENTIALS
+  settings:
+    cluster: drone
+    expand_env_vars: true
+    template: k8s/k8s.yaml
     namespace: default
-    img_names: sansare/kafka-connect
-    img_cnts: kafka-connect
-    img_tags: '${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}'
-    secrets:
-    - source: k8s_stable_ca
-      target: k8s_ca
-    - source: k8s_stable_user
-      target: k8s_user
-    - source: k8s_stable_token
-      target: k8s_token
-    - source: k8s_stable_addr
-      target: k8s_addr
-    when:
-      event: deployment
-      environment: stable
-  deploy2production:
-    image: sansare/drone_k8s_rollout
+    skip_secret_template: true
+    zone: us-east1-c
+    vars:
+      app: kafka-connect
+      stack: storiqa
+      image: gcr.io/sansar-299400/kafka-connect:'${DRONE_TAG}'
+  when:
+    event:
+      - tag
+
+# deploy stable
+- name: deploy-stable
+  image: nytimes/drone-gke
+  environment:
+    TOKEN:
+      from_secret: GOOGLE_CREDENTIALS
+  settings:
+    cluster: drone
+    expand_env_vars: true
+    template: k8s/k8s.yaml
     namespace: default
-    kind: deployment
-    object: kafka-connect
-    img_names: sansare/kafka-connect
-    img_tags: '${DRONE_TAG}'
-    img_cnts: kafka-connect
-    secrets:
-    - source: k8s_prod_ca
-      target: k8s_ca
-    - source: k8s_prod_user
-      target: k8s_user
-    - source: k8s_prod_token
-      target: k8s_token
-    - source: k8s_prod_addr
-      target: k8s_addr
-    when:
-      event: deployment
-      environment: production
+    skip_secret_template: true
+    zone: us-east1-c
+    vars:
+      app: kafka-connect
+      stack: storiqa
+      image: gcr.io/sansar-299400/kafka-connect:${DRONE_BRANCH//\//_}${DRONE_PARENT_BUILD_NUMBER}
+  when:
+    target:
+      - stable
+
+# deploy production
+- name: deploy-production
+  image: nytimes/drone-gke
+  environment:
+    TOKEN:
+      from_secret: GOOGLE_CREDENTIALS
+  settings:
+    cluster: drone
+    expand_env_vars: true
+    template: k8s/k8s.yaml
+    namespace: default
+    skip_secret_template: true
+    zone: us-east1-c
+    vars:
+      app: kafka-connect
+      stack: storiqa
+      image: gcr.io/sansar-299400/kafka-connect:'${DRONE_TAG}'
+  when:
+    target:
+      - production

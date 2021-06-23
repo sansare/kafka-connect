@@ -10,7 +10,7 @@ myname=`basename $0`
 # Options
 ###
 
-es_url_base=${ES_URL-"http://elasticsearch:9200"}
+es_url_base=${ES_URL-"http://stores-es:9200"}
 es_url_mapping="_mappings/_doc"
 es_url_open="_open"
 es_url_close="_close"
@@ -114,4 +114,4 @@ do
 done
 
 exit 0
- 
+
