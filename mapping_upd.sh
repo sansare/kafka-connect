@@ -51,12 +51,14 @@ indexExist() {
 
 indexCreate() {
     index=$1
+    settings=`cat ${es_mapping_dir%%/}/${index}-settings.json`
     mapping=`cat ${es_mapping_dir%%/}/${index}.json`
     index_json="{
-  \"mappings\": {
-    \"_doc\": $mapping
-  }
-}"
+    \"settings\": $settings,
+    \"mappings\": {
+        \"_doc\": $mapping
+      }
+    }"
     curl -si \
         -X PUT \
         -H 'Content-Type: application/json' \
