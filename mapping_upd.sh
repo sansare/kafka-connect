@@ -109,6 +109,8 @@ do
         settingsUpdate $index
         mappingUpdate $index
     else
+        settingsUpdate $index
+        mappingUpdate $index
         indexCreate $index
     fi
 done
