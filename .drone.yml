@@ -69,12 +69,12 @@ steps:
     TOKEN:
       from_secret: GOOGLE_CREDENTIALS
   settings:
-    cluster: drone
+    cluster: sansar-cluster
     expand_env_vars: true
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: us-east1-c
+    zone: asia-south2-a
     vars:
       app: kafka-connect
       stack: storiqa
@@ -92,12 +92,12 @@ steps:
     TOKEN:
       from_secret: GOOGLE_CREDENTIALS
   settings:
-    cluster: drone
+    cluster: sansar-cluster
     expand_env_vars: true
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: us-east1-c
+    zone: asia-south2-a
     vars:
       app: kafka-connect
       stack: storiqa
@@ -113,12 +113,12 @@ steps:
     TOKEN:
       from_secret: GOOGLE_CREDENTIALS
   settings:
-    cluster: drone
+    cluster: sansar-cluster
     expand_env_vars: true
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: us-east1-c
+    zone: asia-south2-a
     vars:
       app: kafka-connect
       stack: storiqa
@@ -134,12 +134,12 @@ steps:
     TOKEN:
       from_secret: GOOGLE_CREDENTIALS
   settings:
-    cluster: drone
+    cluster: sansar-cluster
     expand_env_vars: true
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: us-east1-c
+    zone: asia-south2-a
     vars:
       app: kafka-connect
       stack: storiqa
