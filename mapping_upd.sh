@@ -19,7 +19,7 @@ es_indices=(
     "stores"
     "products"
 )
-es_mapping_dir="/kafka-elastic-sink-connector/mapping"
+es_mapping_dir="./kafka-elastic-sink-connector/mapping"
 
 # Path to log file
 log_path="/var/log/$myname.log"
