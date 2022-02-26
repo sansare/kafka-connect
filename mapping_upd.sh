@@ -51,10 +51,10 @@ indexExist() {
 
 indexCreate() {
     index=$1
-    # settings=`cat ${es_mapping_dir%%/}/${index}-settings.json`
-    # index_json="{ \"settings\": $settings, \"mappings\": { \"_doc\": $mapping } }"
+    settings=`cat ${es_mapping_dir%%/}/${index}-settings.json`
     mapping=`cat ${es_mapping_dir%%/}/${index}.json`
     index_json="{
+    \"settings\": $settings,
     \"mappings\": {
         \"_doc\": $mapping
       }
