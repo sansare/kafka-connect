@@ -62,7 +62,7 @@ indexCreate() {
     curl -si \
         -X PUT \
         -H 'Content-Type: application/json' \
-        "${es_url_base%%/}/${index}" \
+        "${es_url_base%%/}/${index}"?include_type_name=true \
         -d "$index_json"
 }
 
