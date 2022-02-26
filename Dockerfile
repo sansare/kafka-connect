@@ -1,4 +1,4 @@
-FROM confluentinc/cp-kafka-connect:7.0.1
+FROM confluentinc/cp-kafka-connect:6.2.0
 
 ENV CONNECT_PLUGIN_PATH="/etc/kafka-connect/plugins"
 
