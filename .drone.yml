@@ -19,7 +19,7 @@ steps:
 
 # Build
 - name: build
-  image: maven:3.5
+  image: maven:3.8.4
   commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
     - cd debezium && mvn clean package -DskipTests=true && cd ..
