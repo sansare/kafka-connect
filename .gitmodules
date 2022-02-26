@@ -3,4 +3,4 @@
 	url =  https://github.com/sansare/kafka-elastic-sink-connector.git
 [submodule "debezium"]
 	path = debezium
-	url = https://github.com/sansare/debezium.git
+	url = https://github.com/debezium/debezium.git
