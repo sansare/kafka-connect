@@ -3,9 +3,10 @@ FROM confluentinc/cp-kafka-connect:7.0.1
 ENV CONNECT_PLUGIN_PATH="/etc/kafka-connect/plugins"
 
 RUN pwd
+RUN whoami
 RUN ls -la
 
-RUN mkdir -p /kafka-elastic-sink-connector/mapping/ /etc/kafka-connect/plugins
+RUN mkdir -p ./kafka-elastic-sink-connector/mapping/ /etc/kafka-connect/plugins
 COPY kc-plugins /etc/kafka-connect/plugins
 COPY kafka-elastic-sink-connector/target/kafka-elastic-sink-connector-1.0-SNAPSHOT.jar /etc/kafka-connect/plugins/elastic-sink-connector/
 COPY debezium/debezium-core/target/debezium-core-1.9.0-SNAPSHOT.jar /etc/kafka-connect/plugins/debezium-connector-postgres/
