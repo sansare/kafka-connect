@@ -29,7 +29,7 @@ spec:
         - containerPort: 8083
         env:
           - name: CONNECT_BOOTSTRAP_SERVERS
-            value: broker:9092
+            value: broker:29092
           - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
             value: "1"
           - name: CONNECT_CONFIG_STORAGE_TOPIC
