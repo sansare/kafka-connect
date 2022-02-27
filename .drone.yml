@@ -18,17 +18,17 @@ steps:
     - git submodule update --recursive --remote
 
 # Build
-- name: build
-  image: maven:3.8.4
-  commands:
-    - cd kafka-elastic-sink-connector && mvn clean package && cd ..
-#    - cd debezium && mvn clean package -DskipTests=true && cd ..
-  when:
-    event:
-      - push
-      - tag
-    branch:
-      - master
+#- name: build
+#  image: maven:3.8.4
+#  commands:
+#    - cd kafka-elastic-sink-connector && mvn clean package && cd ..
+##    - cd debezium && mvn clean package -DskipTests=true && cd ..
+#  when:
+#    event:
+#      - push
+#      - tag
+#    branch:
+#      - master
 
 # publish image in gce registry
 - name: publish
