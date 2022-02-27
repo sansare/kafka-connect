@@ -11,7 +11,7 @@ myname=`basename $0`
 ###
 
 es_url_base=${ES_URL-"http://stores-es:9200"}
-es_url_mapping="_mappings/_doc"
+es_url_mapping="_mappings/_doc?include_type_name=true"
 es_url_open="_open"
 es_url_close="_close"
 es_url_settings="_settings"
