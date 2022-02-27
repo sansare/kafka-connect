@@ -2,9 +2,6 @@ FROM confluentinc/cp-kafka-connect:6.2.0
 
 ENV CONNECT_PLUGIN_PATH="/etc/kafka-connect/plugins"
 
-RUN pwd
-RUN whoami
-
 RUN mkdir -p /etc/kafka-connect/plugins ./kafka-elastic-sink-connector/mapping/
 COPY kc-plugins /etc/kafka-connect/plugins
 COPY kafka-elastic-sink-connector/target/kafka-elastic-sink-connector-1.0-SNAPSHOT.jar /etc/kafka-connect/plugins/elastic-sink-connector/
