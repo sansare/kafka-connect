@@ -17,7 +17,7 @@ steps:
     - git submodule init
     - git submodule update --recursive --remote
 
- Build
+# Build
 - name: build
   image: maven:3.8.4
   commands:
