@@ -74,7 +74,7 @@ steps:
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: asia-south2-a
+    zone: asia-south2-b
     vars:
       app: kafka-connect
       stack: storiqa
@@ -97,7 +97,7 @@ steps:
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: asia-south2-a
+    zone: asia-south2-b
     vars:
       app: kafka-connect
       stack: storiqa
@@ -118,7 +118,7 @@ steps:
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: asia-south2-a
+    zone: asia-south2-b
     vars:
       app: kafka-connect
       stack: storiqa
@@ -139,7 +139,7 @@ steps:
     template: k8s/k8s.yaml
     namespace: default
     skip_secret_template: true
-    zone: asia-south2-a
+    zone: asia-south2-b
     vars:
       app: kafka-connect
       stack: storiqa
