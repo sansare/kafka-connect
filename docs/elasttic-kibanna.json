@@ -1,0 +1,24 @@
+GET stores
+GET products
+
+
+GET /products/_search
+{
+  "_source": false,
+  "suggest": {
+    "name-suggest": {
+      "completion": {
+        "contexts": {
+          "store_and_status": [
+            "published"
+          ]
+        },
+        "field": "suggest",
+        "fuzzy": true,
+        "size": 101,
+        "skip_duplicates": true
+      },
+      "prefix": "te"
+    }
+  }
+}
