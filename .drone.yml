@@ -134,7 +134,7 @@ steps:
     TOKEN:
       from_secret: GOOGLE_CREDENTIALS
   settings:
-    cluster: sansar-cluster
+    cluster: sansar-prod
     expand_env_vars: true
     template: k8s/k8s.yaml
     namespace: default
