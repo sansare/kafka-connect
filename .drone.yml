@@ -1,10 +1,9 @@
 kind: pipeline
-type: kubernetes
 name: default
 
 platform:
   os: linux
-  arch: arm64
+  arch: amd64
 
 clone:
   depth: 50
@@ -19,7 +18,7 @@ steps:
 
 # Build
 - name: build
-  image: maven:3.8.4
+  image: maven:3.9.7
   commands:
     - cd kafka-elastic-sink-connector && mvn clean package && cd ..
 #    - cd debezium && mvn clean package -DskipTests=true && cd ..
