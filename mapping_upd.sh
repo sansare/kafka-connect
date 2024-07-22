@@ -11,7 +11,7 @@ myname=`basename $0`
 ###
 
 es_url_base=${ES_URL-"http://stores-es:9200"}
-es_url_mapping="_mappings/_doc?include_type_name=true"
+es_url_mapping="_mappings"
 es_url_open="_open"
 es_url_close="_close"
 es_url_settings="_settings"
@@ -55,14 +55,12 @@ indexCreate() {
     mapping=`cat ${es_mapping_dir%%/}/${index}.json`
     index_json="{
     \"settings\": $settings,
-    \"mappings\": {
-        \"_doc\": $mapping
-      }
+    \"mappings\": $mapping
     }"
     curl -si \
         -X PUT \
         -H 'Content-Type: application/json' \
-        "${es_url_base%%/}/${index}"?include_type_name=true \
+        "${es_url_base%%/}/${index}" \
         -d "$index_json"
 }
 
