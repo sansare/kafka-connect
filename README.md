@@ -12,8 +12,8 @@ debezium-connector-postgres v1.9.0
   confluentinc/kafka-connect-elasticsearch:11.1.8
 
 
-git rm --cached kafka-elastic-sink-connector && rm -rf .git/modules/kafka-elastic-sink-connector && rm -rf kafka-elastic-sink-connector
-git submodule add git@github.com:sansare/kafka-elastic-sink-connector.git kafka-elastic-sink-connector
+git rm --cached -f kafka-elastic-sink-connector && rm -rf .git/modules/kafka-elastic-sink-connector && rm -rf kafka-elastic-sink-connector
+git submodule add --force -b master git@github.com:sansare/kafka-elastic-sink-connector.git kafka-elastic-sink-connector
 
-git rm --cached debezium && rm -rf .git/modules/debezium && rm -rf debezium
-git submodule add git@github.com:debezium/debezium.git debezium
+git rm --cached -f debezium && rm -rf .git/modules/debezium && rm -rf debezium
+git submodule add --force -b main git@github.com:debezium/debezium.git debezium
