@@ -17,3 +17,4 @@ git submodule add --force -b master git@github.com:sansare/kafka-elastic-sink-co
 
 git rm --cached -f debezium && rm -rf .git/modules/debezium && rm -rf debezium
 git submodule add --force -b main git@github.com:debezium/debezium.git debezium
+
