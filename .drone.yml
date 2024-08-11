@@ -5,6 +5,9 @@ platform:
   os: linux
   arch: amd64
 
+clone:
+  depth: 50
+
 steps:
 # Fetch git sub-modules
 - name: submodules
