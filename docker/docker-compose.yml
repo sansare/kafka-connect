@@ -28,3 +28,8 @@ services:
       CONNECT_PLUGIN_PATH: /etc/kafka-connect/plugins
       ES_URL: "http://stores-es:9200"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+
+networks:
+  default:
+    external: true
+    name: storiqa
