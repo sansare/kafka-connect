@@ -12,9 +12,21 @@ steps:
 # Fetch git sub-modules
 - name: submodules
   image: alpine/git
+  environment:
+    SSH_KEY:
+      from_secret: SSH_KEY
   commands:
-  - git submodule init
-  - git submodule update --recursive --remote
+    # write the ssh key to disk
+    - mkdir /root/.ssh
+    - echo -n "$SSH_KEY" > /root/.ssh/id_rsa
+    - chmod 600 /root/.ssh/id_rsa
+
+    # add github to known hosts
+    - touch /root/.ssh/known_hosts
+    - chmod 600 /root/.ssh/known_hosts
+    - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+    - git submodule init
+    - git submodule update --recursive --remote
 
 # Build
 - name: build
