@@ -53,7 +53,7 @@ spec:
           - name: CONNECT_INTERNAL_VALUE_CONVERTER
             value: "org.apache.kafka.connect.json.JsonConverter"
           - name: CONNECT_REST_ADVERTISED_HOST_NAME
-            value: "connect"
+            value: "kafka-connect"
           - name: CONNECT_LOG4J_ROOT_LOGLEVEL
             value: "INFO"
           - name: CONNECT_LOG4J_LOGGERS
