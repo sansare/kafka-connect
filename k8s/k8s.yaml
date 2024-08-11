@@ -29,45 +29,45 @@ spec:
         - containerPort: 8083
         env:
           - name: CONNECT_BOOTSTRAP_SERVERS
-            value: broker:29092
-          - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
-            value: "1"
-          - name: CONNECT_CONFIG_STORAGE_TOPIC
-            value: docker-connect-configs
-          - name: CONNECT_GROUP_ID
-            value: compose-connect-group
-          - name: CONNECT_INTERNAL_KEY_CONVERTER
-            value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_INTERNAL_VALUE_CONVERTER
-            value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_KEY_CONVERTER
-            value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
-            value: http://kafka-schema-registry:8081
-          - name: CONNECT_LOG4J_LOGGERS
-            value: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.debezium=INFO,org.skynyrd=DEBUG
-          - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-            value: INFO
-          - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
-            value: "1"
-          - name: CONNECT_OFFSET_STORAGE_TOPIC
-            value: docker-connect-offsets
-          - name: CONNECT_PLUGIN_PATH
-            value: /etc/kafka-connect/plugins
-          - name: CONNECT_REST_ADVERTISED_HOST_NAME
-            value: kafka-connect
+            value: "broker:9092"
           - name: CONNECT_REST_PORT
             value: "8083"
-          - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
-            value: "1"
+          - name: CONNECT_GROUP_ID
+            value: compose-connect-group
+          - name: CONNECT_CONFIG_STORAGE_TOPIC
+            value: docker-connect-configs
+          - name: CONNECT_OFFSET_STORAGE_TOPIC
+            value: docker-connect-offsets
           - name: CONNECT_STATUS_STORAGE_TOPIC
             value: docker-connect-status
+          - name: CONNECT_KEY_CONVERTER
+            value: org.apache.kafka.connect.storage.StringConverter
+          - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
+            value: 'http://schema-registry:8081'
           - name: CONNECT_VALUE_CONVERTER
             value: org.apache.kafka.connect.json.JsonConverter
           - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
-            value: http://kafka-schema-registry:8081
+            value: 'http://schema-registry:8081'
+          - name: CONNECT_INTERNAL_KEY_CONVERTER
+            value: "org.apache.kafka.connect.json.JsonConverter"
+          - name: CONNECT_INTERNAL_VALUE_CONVERTER
+            value: "org.apache.kafka.connect.json.JsonConverter"
+          - name: CONNECT_REST_ADVERTISED_HOST_NAME
+            value: "connect"
+          - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+            value: "INFO"
+          - name: CONNECT_LOG4J_LOGGERS
+            value: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.debezium=INFO,org.skynyrd=DEBUG"
+          - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+            value: "1"
+          - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+            value: "1"
+          - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+            value: "1"
+          - name: CONNECT_PLUGIN_PATH
+            value: /etc/kafka-connect/plugins
           - name: ES_URL
-            value: http://stores-es:9200
+            value: "http://stores-es:9200"
         resources: {}
       restartPolicy: Always
 ---
