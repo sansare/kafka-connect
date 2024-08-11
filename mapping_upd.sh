@@ -10,7 +10,7 @@ myname=`basename $0`
 # Options
 ###
 
-es_url_base=${ES_URL-"http://stores-es:9200"}
+es_url_base="http://stores-es:9200"
 es_url_mapping="_mappings"
 es_url_open="_open"
 es_url_close="_close"
@@ -53,42 +53,26 @@ indexCreate() {
     index=$1
     settings=`cat ${es_mapping_dir%%/}/${index}-settings.json`
     mapping=`cat ${es_mapping_dir%%/}/${index}.json`
-    index_json="{
-    \"settings\": $settings,
-    \"mappings\": $mapping
-    }"
-    curl -si \
-        -X PUT \
-        -H 'Content-Type: application/json' \
-        "${es_url_base%%/}/${index}" \
-        -d "$index_json"
+    index_json="{ \"settings\": $settings, \"mappings\": $mapping }"
+    echo "Creating index $index"
+    echo "Creating index_json $index_json"
+
+    curl -si -X PUT -H "Accept:application/json" -H 'Content-Type: application/json' "${es_url_base%%/}/${index}" -d "$index_json"
 }
 
 mappingUpdate() {
     index=$1
-    curl -si \
-        -X PUT \
-        -H 'Content-Type: application/json' \
-        -d @${es_mapping_dir%%/}/${index}.json \
-        "${es_url_base%%/}/${index%%/}/${es_url_mapping%%/}"
+    curl -si -X PUT -H "Accept:application/json" -H 'Content-Type: application/json' -d @${es_mapping_dir%%/}/${index}.json "${es_url_base%%/}/${index%%/}/${es_url_mapping%%/}"
 }
 
 settingsUpdate() {
     index=$1
-    curl -si \
-        -X POST \
-        -H 'Content-Type: application/json' \
-        "${es_url_base%%/}/${index%%/}/${es_url_close%%/}"
-    curl -si \
-        -X PUT \
-        -H 'Content-Type: application/json' \
-        -d @${es_mapping_dir%%/}/${index}-settings.json \
-        "${es_url_base%%/}/${index%%/}/${es_url_settings%%/}"
-    curl -si \
-        -X POST \
-        -H 'Content-Type: application/json' \
-        "${es_url_base%%/}/${index%%/}/${es_url_open%%/}"
+    curl -si -X POST -H "Accept:application/json" -H 'Content-Type: application/json' "${es_url_base%%/}/${index%%/}/${es_url_close%%/}"
+    curl -si -X PUT -H "Accept:application/json" -H 'Content-Type: application/json' -d @${es_mapping_dir%%/}/${index}-settings.json "${es_url_base%%/}/${index%%/}/${es_url_settings%%/}"
+    curl -si -X POST -H "Accept:application/json" -H 'Content-Type: application/json' "${es_url_base%%/}/${index%%/}/${es_url_open%%/}"
 }
+
+
 
 ###
 # main()
