@@ -29,7 +29,7 @@ spec:
         - containerPort: 8083
         env:
           - name: CONNECT_BOOTSTRAP_SERVERS
-            value: "0.0.0.0:9092"
+            value: http://broker:9092
           - name: CONNECT_GROUP_ID
             value: connector-elastic
           - name: CONNECT_CONFIG_STORAGE_TOPIC
