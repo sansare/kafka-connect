@@ -28,41 +28,45 @@ spec:
         ports:
         - containerPort: 8083
         env:
-          - name: CONNECT_BOOTSTRAP_SERVERS
+          - name: BOOTSTRAP_SERVERS
             value: http://broker:9092
-          - name: CONNECT_GROUP_ID
+          - name: GROUP_ID
             value: connector-elastic
-          - name: CONNECT_CONFIG_STORAGE_TOPIC
+          - name: CONFIG_STORAGE_TOPIC
             value: connect-configs-logger
-          - name: CONNECT_OFFSET_STORAGE_TOPIC
+          - name: OFFSET_STORAGE_TOPIC
             value: connect-offsets-logger
-          - name: CONNECT_STATUS_STORAGE_TOPIC
+          - name: STATUS_STORAGE_TOPIC
             value: connect-status-logger
-          - name: CONNECT_KEY_CONVERTER
-            value: org.apache.kafka.connect.storage.StringConverter
+          - name: KEY_CONVERTER
+            value: io.confluent.connect.avro.AvroConverter
+          - name: VALUE_CONVERTER
+            value: io.confluent.connect.avro.AvroConverter
+
           - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
             value: http://schema-registry:8081
-          - name: CONNECT_VALUE_CONVERTER
+          - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
+            value: http://schema-registry:8081
+
+          - name: INTERNAL_KEY_CONVERTER
             value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_INTERNAL_KEY_CONVERTER
+          - name: INTERNAL_VALUE_CONVERTER
             value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_INTERNAL_VALUE_CONVERTER
-            value: org.apache.kafka.connect.json.JsonConverter
-          - name: CONNECT_REST_ADVERTISED_HOST_NAME
+          - name: REST_ADVERTISED_HOST_NAME
             value: "kafka-connect"
-          - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+          - name: LOG4J_ROOT_LOGLEVEL
             value: INFO
-          - name: CONNECT_LOG4J_LOGGERS
+          - name: LOG4J_LOGGERS
             value: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR,io.debezium=INFO,org.skynyrd=DEBUG"
           - name: KAFKA_HEAP_OPTS
             value: "-Xms500M -Xmx800M"
-          - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+          - name: CONFIG_STORAGE_REPLICATION_FACTOR
             value: "1"
-          - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+          - name: OFFSET_STORAGE_REPLICATION_FACTOR
             value: "1"
-          - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+          - name: STATUS_STORAGE_REPLICATION_FACTOR
             value: "1"
-          - name: CONNECT_PLUGIN_PATH
+          - name: PLUGIN_PATH
             value: /etc/kafka-connect/plugins
           - name: ES_URL
             value: http://stores-es:9200
