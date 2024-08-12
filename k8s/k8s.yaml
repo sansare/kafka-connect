@@ -67,6 +67,7 @@ spec:
           - name: ES_URL
             value: http://stores-es:9200
         resources: {}
+      hostname: kafka-connect
       restartPolicy: Always
 ---
 apiVersion: v1
