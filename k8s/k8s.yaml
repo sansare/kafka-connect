@@ -89,3 +89,353 @@ spec:
   selector:
     app: {{.app}}
     stack: {{.stack}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stores-es
+  labels:
+    app: stores-es
+    stack: {{.stack}}
+spec:
+  selector:
+    matchLabels:
+      app: stores-es
+      stack: {{.stack}}
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: stores-es
+        stack: {{.stack}}
+    spec:
+      containers:
+        - name: stores-es
+          image: elasticsearch:8.14.0
+          env:
+            - name: xpack.security.enabled
+              value: "false"
+            - name: ES_JAVA_OPTS
+              value: "-Xms1g -Xmx1g"
+            - name: discovery.type
+              value: "single-node"
+          ports:
+            - containerPort: 9200
+          resources: {}
+          volumeMounts:
+            - name: stq-stores-elastic-data
+              mountPath: /var/lib/elasticsearch/data
+      restartPolicy: Always
+      volumes:
+        - name: stq-stores-elastic-data
+          persistentVolumeClaim:
+            claimName: stq-stores-elastic-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stores-es
+  labels:
+    app: stores-es
+    stack: {{.stack}}
+spec:
+  ports:
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+  selector:
+    app: stores-es
+    stack: {{.stack}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: stq-stores-elastic-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  labels:
+    stack: {{.stack}}
+    app: zookeeper
+spec:
+  selector:
+    matchLabels:
+      stack: {{.stack}}
+      app: zookeeper
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        stack: {{.stack}}
+        app: zookeeper
+    spec:
+      containers:
+        - env:
+            - name: ZOOKEEPER_SERVER_ID
+              value: "1"
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+            - name: ZOOKEEPER_SERVERS
+              value: server.1=zookeeper:2888:3888
+            - name: ZOOKEEPER_TICK_TIME
+              value: "2000"
+          image: confluentinc/cp-zookeeper:7.6.1
+          name: zookeeper
+          ports:
+            - containerPort: 2181
+          resources: {}
+      hostname: zookeeper
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    stack: {{.stack}}
+    app: zookeeper
+  name: zookeeper
+spec:
+  ports:
+    - name: "2181"
+      port: 2181
+      targetPort: 2181
+  selector:
+    stack: {{.stack}}
+    app: zookeeper
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    stack: {{.stack}}
+    app: rest-proxy
+  name: rest-proxy
+spec:
+  selector:
+    matchLabels:
+      stack: {{.stack}}
+      app: rest-proxy
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        stack: {{.stack}}
+        app: rest-proxy
+    spec:
+      containers:
+        - image: confluentinc/cp-kafka-rest:7.6.1
+          name: rest-proxy
+          env:
+            - name: KAFKA_REST_HOST_NAME
+              value: rest-proxy
+            - name: KAFKA_REST_LISTENERS
+              value: http://0.0.0.0:8082
+            - name: KAFKA_REST_SCHEMA_REGISTRY_URL
+              value: http://schema-registry:8081
+            - name: KAFKA_REST_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            - name: KAFKA_REST_BOOTSTRAP_SERVERS
+              value: broker:9092
+          ports:
+            - containerPort: 8082
+          resources: {}
+      hostname: rest-proxy
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    stack: {{.stack}}
+    app: rest-proxy
+  name: rest-proxy
+spec:
+  ports:
+    - name: "8082"
+      port: 8082
+      targetPort: 8082
+  selector:
+    stack: {{.stack}}
+    app: rest-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    stack: {{.stack}}
+    app: schema-registry
+  name: schema-registry
+spec:
+  selector:
+    matchLabels:
+      stack: {{.stack}}
+      app: schema-registry
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        stack: {{.stack}}
+        app: schema-registry
+    spec:
+      hostname: schema-registry
+      restartPolicy: Always
+      containers:
+        - image: confluentinc/cp-schema-registry:7.6.1
+          name: schema-registry
+          env:
+            - name: SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL
+              value: zookeeper:2181
+            - name: SCHEMA_REGISTRY_HOST_NAME
+              value: schema-registry
+            - name: SCHEMA_REGISTRY_LISTENERS
+              value: http://schema-registry:8081
+            - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+              value: broker:9092
+          ports:
+            - containerPort: 8081
+          resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    stack: {{.stack}}
+    app: schema-registry
+  name: schema-registry
+spec:
+  ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8081
+  selector:
+    stack: {{.stack}}
+    app: schema-registry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    stack: storiqa
+    app: broker
+  name: broker
+spec:
+  selector:
+    matchLabels:
+      stack: storiqa
+      app: broker
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        stack: storiqa
+        app: broker
+    spec:
+      containers:
+        - image: confluentinc/cp-kafka:7.6.1
+          name: broker
+          env:
+            - name: KAFKA_BROKER_ID
+              value: "1"
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://broker:9092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT"
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+              value: "1"
+            - name: KAFKA_NUM_PARTITIONS
+              value: "100"
+          ports:
+            - containerPort: 9092
+          resources: {}
+      hostname: broker
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    stack: storiqa
+    app: broker
+  name: broker
+spec:
+  ports:
+    - protocol: TCP
+      port: 9092
+      targetPort: 9092
+  selector:
+    stack: storiqa
+    app: broker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    stack: storiqa
+    app: kibana
+  name: kibana
+spec:
+  selector:
+    matchLabels:
+      stack: storiqa
+      app: kibana
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        stack: storiqa
+        app: kibana
+    spec:
+      containers:
+        - env:
+            - name: ELASTICSEARCH_HOSTS
+              value: "http://stores-es:9200"
+            - name: discovery.type
+              value: "single-node"
+          image: kibana:8.14.0
+          name: kibana
+          ports:
+            - containerPort: 5601
+          resources: {}
+      hostname: kibana
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    stack: storiqa
+    app: kibana
+  name: kibana
+spec:
+  ports:
+    - name: "5601"
+      port: 5601
+      targetPort: 5601
+  selector:
+    stack: storiqa
+    app: kibana
