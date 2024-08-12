@@ -292,9 +292,11 @@ spec:
     spec:
       hostname: schema-registry
       restartPolicy: Always
+      enableServiceLinks: false
       containers:
-        - image: confluentinc/cp-schema-registry:7.6.1
-          name: schema-registry
+        - name: a-vro-schema-registry
+          image: confluentinc/cp-schema-registry:7.6.1
+          imagePullPolicy: Always
           env:
             - name: SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL
               value: zookeeper:2181
@@ -305,7 +307,7 @@ spec:
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
               value: broker:9092
           ports:
-            - containerPort: 8081
+          - containerPort: 8081
           resources: {}
 ---
 apiVersion: v1
