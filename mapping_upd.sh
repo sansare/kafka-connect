@@ -10,7 +10,7 @@ myname=`basename $0`
 # Options
 ###
 
-es_url_base="http://stores-es:9200"
+es_url_base="http://0.0.0.0:9200"
 es_url_mapping="_mappings"
 es_url_open="_open"
 es_url_close="_close"
