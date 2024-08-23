@@ -39,15 +39,13 @@ spec:
           - name: CONNECT_STATUS_STORAGE_TOPIC
             value: connect-status-logger
           - name: CONNECT_KEY_CONVERTER
-            value: io.confluent.connect.avro.AvroConverter
+            value: org.apache.kafka.connect.storage.StringConverter
           - name: CONNECT_VALUE_CONVERTER
-            value: io.confluent.connect.avro.AvroConverter
-
+            value: org.apache.kafka.connect.json.JsonConverter
           - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL
             value: http://schema-registry:8081
           - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
             value: http://schema-registry:8081
-
           - name: CONNECT_INTERNAL_KEY_CONVERTER
             value: org.apache.kafka.connect.json.JsonConverter
           - name: CONNECT_INTERNAL_VALUE_CONVERTER
